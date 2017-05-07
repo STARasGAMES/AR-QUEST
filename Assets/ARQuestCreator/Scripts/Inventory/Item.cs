@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 namespace ARQuestCreator
 {
-    
+    [RequireComponent(typeof(WorldButton))]
     [RequireComponent(typeof(BoxCollider))]
-    public class Item : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+    public class Item : MonoBehaviour, IWorldButtonClickHandler
     {
         public string name = "defaultItemName";
         [TextArea(3, 20)]
@@ -17,6 +17,7 @@ namespace ARQuestCreator
         public bool rotatable = true;
         public bool scalable = true;
 
+        private WorldButton _btn;
         private Collider _collider;
 
 #region Unity MonoBehaviur Events
@@ -24,12 +25,15 @@ namespace ARQuestCreator
         {
             SetChildActive(true);
             _collider = GetComponent<Collider>();
-            _collider.enabled = pickable;
+            _btn = GetComponent<WorldButton>();
+            _btn.SubscibeOnClickHandler(this);
+            _btn.enabled = pickable;
         }
 
         private void OnDisable()
         {
             SetChildActive(false);
+            _btn.UnsubscribeOnClickHandler(this);
         }
 #endregion //Unity MonoBehaviur Events
 
@@ -41,26 +45,15 @@ namespace ARQuestCreator
             }
         }
 
-#region IPointerHandlerImplementation
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            //throw new NotImplementedException();
-        }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public void OnWorldButtonClickHandler()
         {
-           // throw new NotImplementedException();
-        }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-          //  throw new NotImplementedException();
+            Debug.Log("On Item Click", this);
         }
     }
-#endregion // IPointerHandlerImplementation
 
-   
+
 }
 
 

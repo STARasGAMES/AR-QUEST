@@ -43,6 +43,7 @@ public class BoxController : MonoBehaviour, IWorldButtonClickHandler {
     {
         _anim.Play(_nameIdle, PlayMode.StopAll);
         _isOpened = false;
+        openButton.UnsubscribeOnClickHandler(this);
     }
 
 }
