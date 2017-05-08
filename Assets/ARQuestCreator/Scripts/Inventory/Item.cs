@@ -9,6 +9,7 @@ namespace ARQuestCreator
     [RequireComponent(typeof(BoxCollider))]
     public class Item : MonoBehaviour, IWorldButtonClickHandler
     {
+
         public string name = "defaultItemName";
         [TextArea(3, 20)]
         public string description = "default description";
@@ -33,7 +34,9 @@ namespace ARQuestCreator
         public ItemState state = ItemState.World;
 
 
-#region Unity MonoBehaviur Events
+        #region Unity MonoBehaviur Events
+
+
         private void OnEnable()
         {
             SetChildActive(true);

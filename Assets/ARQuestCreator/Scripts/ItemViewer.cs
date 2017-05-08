@@ -117,6 +117,9 @@ namespace ARQuestCreator
             return globalCenter;
         }
 
-
+        public bool IsEmpty()
+        {
+            return currentItem == null;
+        }
     }
 }

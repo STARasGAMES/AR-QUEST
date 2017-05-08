@@ -14,9 +14,11 @@ namespace ARQuestCreator
         public void ViewItem(Item item)
         {
             //PlayerInventory.Instance.RemoveItem(item);
-            ItemViewer.Instance.ViewItem(item);
-            
-            ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.ItemView);
+            if (ItemViewer.Instance.IsEmpty())
+            {
+                ItemViewer.Instance.ViewItem(item);
+                ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.ItemView);
+            }
         }
                      
         public void PickupItem(Item item)

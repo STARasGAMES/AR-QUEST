@@ -27,6 +27,22 @@ namespace ARQuestCreator
             item.transform.parent = null;
             return true;
         }
+
+        public bool ContainsItem(Item item)
+        {
+            return new List<Item>(GetItems()).Contains(item);
+        }
+
+        public bool ContainsItems(List<Item> items)
+        {
+            var list = new List<Item>(GetItems());
+            foreach(var item in items)
+            {
+                if (!list.Contains(item))
+                    return false;
+            }
+            return true;
+        }
     }
 }
 
