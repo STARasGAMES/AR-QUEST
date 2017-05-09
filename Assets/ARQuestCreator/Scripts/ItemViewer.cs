@@ -28,9 +28,8 @@ namespace ARQuestCreator
             if (currentItem != null)
             {
                 _camera.enabled = true;
-                Rotate();
-
-                Scale();
+                if (!Scale())
+                    Rotate();
             }
             else
             {
@@ -41,7 +40,7 @@ namespace ARQuestCreator
         private void Rotate()
         {
             // Get the fingers we want to use
-            var fingers = LeanTouch.GetFingers(true, 1);
+            var fingers = LeanTouch.GetFingers(false, 1);
 
             // Calculate the screenDelta value based on these fingers
             var screenDelta = LeanGesture.GetScreenDelta(fingers) * _rotationSens;
@@ -50,14 +49,15 @@ namespace ARQuestCreator
             //_transform.eulerAngles += new Vector3(screenDelta.y, screenDelta.x) ;
         }
 
-        private void Scale()
+        private bool Scale()
         {
             // Get the fingers we want to use
-            var fingers = LeanTouch.GetFingers(true, 2);
-
+            var fingers = LeanTouch.GetFingers(false, 2);
+            
             // Calculate the scaling values based on these fingers
             var scale = LeanGesture.GetPinchScale(fingers, 0);
-
+            if (scale == 1)
+                return false;
             float newScale = _camera.fieldOfView / scale;
             newScale = Mathf.Clamp(newScale, 5, 50);
             _camera.fieldOfView = newScale;
@@ -65,6 +65,7 @@ namespace ARQuestCreator
             //float newScale = _transform.localScale.x * scale;
             //newScale = Mathf.Clamp(newScale, 0.1f, _maxScale);
             //_transform.localScale = Vector3.one * newScale;
+            return true;
         }
 
         public void ViewItem(Item item)
@@ -74,11 +75,12 @@ namespace ARQuestCreator
             currentItem = item;
             _transform.localPosition = _startPos;
             _transform.localScale = Vector3.one;
-            _transform.rotation = Quaternion.identity;
+            _transform.localEulerAngles = Vector3.up * 180;
             _camera.fieldOfView = 50;
             item.enabled = true;
             item.transform.SetParent(_transform);
             item.transform.localPosition = Vector3.zero;
+            item.transform.localRotation = Quaternion.identity;
             Vector3 globalCenter = GetCenterOfGO(item.gameObject);
             item.transform.localPosition -= _transform.InverseTransformPoint(globalCenter);
             item.button.enabled = false;
