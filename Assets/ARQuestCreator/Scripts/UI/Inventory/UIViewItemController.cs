@@ -78,11 +78,11 @@ namespace ARQuestCreator
             {
                 case Item.ItemState.Inventory:
                     currentItem.button.enabled = false;
-                    ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.Inventory);
+                    ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.Inventory);
                     break;
                 case Item.ItemState.World:
                     currentItem.button.enabled = true;
-                    ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.Player);
+                    ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.Player);
                     break;
                 default:
                     Debug.LogError("Unknow item state");

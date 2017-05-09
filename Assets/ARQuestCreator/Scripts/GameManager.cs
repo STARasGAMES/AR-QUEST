@@ -8,7 +8,7 @@ namespace ARQuestCreator
 
         private void Start()
         {
-            ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.Player);
+            ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.Player);
         }
 
         public void ViewItem(Item item)
@@ -17,25 +17,27 @@ namespace ARQuestCreator
             if (ItemViewer.Instance.IsEmpty())
             {
                 ItemViewer.Instance.ViewItem(item);
-                ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.ItemView);
+                ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.ItemView);
             }
         }
                      
         public void PickupItem(Item item)
         {
             PlayerInventory.Instance.AddItem(item);
-            ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.Player);
+            ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.Player);
         }
 
         public void OnInventoryShow()
         {
-            ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.Inventory);
+            ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.Inventory);
         }
 
         public void OnInventoryHide()
         {
-            ScreenSpaceUIController.Instance.ShowUI(ScreenSpaceUIController.UIType.Player);
+            ScreenSpaceUIManager.Instance.ShowUI(ScreenSpaceUIManager.UIType.Player);
         }
+
+        
 
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ARQuestCreator {
-    public class ScreenSpaceUIController : Singleton<ScreenSpaceUIController> {
+    public class ScreenSpaceUIManager : Singleton<ScreenSpaceUIManager> {
 
         [SerializeField] UIInventoryController _inventoryUI;
         [SerializeField] UIViewItemController _itemViewUI;
         [SerializeField] UIPlayerController _playerUI;
-
+        [SerializeField] UIPushNotificationController _notificationUI;
         private IUIController[] _array;
 
         public enum UIType
@@ -59,6 +59,14 @@ namespace ARQuestCreator {
                     _array[i].Hide();
                 }
             }
+        }
+
+        public void ShowNotification(string message,
+            UIPushNotificationController.NotificationLifeTimeType lifeTime = UIPushNotificationController.NotificationLifeTimeType.Medium,
+            UIPushNotificationController.NotificationType type = UIPushNotificationController.NotificationType.Neutral)
+        {
+            _notificationUI.SetNotification(message, lifeTime, type);
+            _notificationUI.Show();
         }
     }
 }
