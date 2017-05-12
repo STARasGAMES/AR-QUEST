@@ -41,12 +41,14 @@ namespace ARQuestCreator
 
         public void Hide()
         {
-            _animator.SetBool(0, false);
+            Debug.Log("Hide Notification");
+            _animator.SetBool("Show", false);
         }
 
         public void Show()
         {
-            _animator.SetBool(0, true);
+            Debug.Log("Show Notification");
+            _animator.SetBool("Show", true);
         }
 
         // Use this for initialization

@@ -6,20 +6,29 @@ namespace ARQuestCreator
     public class PlayerInventory : Singleton<PlayerInventory> {
 
         [SerializeField] Transform _inventoryRoot;
-        //[SerializeField] List<Item> _items;
+        [SerializeField] List<Item> _items;
+
+        private void Start()
+        {
+            
+        }
 
         public void AddItem(Item item)
         {
+            if (!ContainsItem(item))
+                _items.Add(item);
+            else
+                Debug.LogError("WTF", item);
             item.transform.SetParent(_inventoryRoot);
             item.transform.localPosition = - Vector3.up * _inventoryRoot.childCount;
-            item.ApplyCurrentParent();
             item.state = Item.ItemState.Inventory;
-            item.enabled = false;
+            item.SetAtcive(false);
+            item.ApplyCurrentParent();
         }
 
-        public Item[] GetItems()
+       public Item[] GetItems()
         {
-            return _inventoryRoot.GetComponentsInChildren<Item>(true);
+            return _items.ToArray();
         }
 
         public bool RemoveItem(Item item)
@@ -30,15 +39,14 @@ namespace ARQuestCreator
 
         public bool ContainsItem(Item item)
         {
-            return new List<Item>(GetItems()).Contains(item);
+            return _items.Contains(item);
         }
 
         public bool ContainsItems(List<Item> items)
         {
-            var list = new List<Item>(GetItems());
             foreach(var item in items)
             {
-                if (!list.Contains(item))
+                if (!ContainsItem(item))
                     return false;
             }
             return true;

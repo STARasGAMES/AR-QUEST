@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
-    <ImageTarget name="NewForTestSlon" size="10.000000 10.052356" />
-    <ImageTarget name="testAR2" size="10.000000 10.052356" />
-    <ImageTarget name="testAR" size="10.000000 10.052356" />
+    <ImageTarget name="Target_1" size="10.000000 10.052356" />
+    <ImageTarget name="bummarker" size="1.000000 1.000000" />
   </Tracking>
 </QCARConfig>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ARQuestCreator
+namespace ARQuestCreator.UI
 {
     public class UIViewItemController : MonoBehaviour, IUIController
     {

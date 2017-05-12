@@ -45,7 +45,7 @@ namespace ARQuestCreator
             for (int i=0; i<uiItems.Length; i++)
             {
                 if (i >= items.Length)
-                    uiItems[i].Hide();
+                    Destroy(uiItems[i].gameObject);
                 else
                 {
                     uiItems[i].SetItem(items[i]);

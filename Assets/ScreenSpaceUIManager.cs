@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ARQuestCreator {
+namespace ARQuestCreator.UI {
     public class ScreenSpaceUIManager : Singleton<ScreenSpaceUIManager> {
 
         [SerializeField] UIInventoryController _inventoryUI;

@@ -8,13 +8,16 @@ namespace ARQuestCreator
     public class ItemViewer : Singleton<ItemViewer> {
 
         [SerializeField] float _rotationSens = 1;
-        [SerializeField] float _maxScale = 3;
+        [SerializeField] float _maxFoV = 60;
+        [SerializeField] float _startScale = 3;
         [SerializeField] Camera _camera;
+        [SerializeField] bool _ignoreGuiFingers = false;
+        [SerializeField] Vector3 RotateAxis = Vector3.forward;
         private Transform _transform;
         public Item currentItem { get; private set; }
         private Vector3 _startPos;
 
-        Renderer[] _renderers;
+        Transform[] _transforms;
         int[] _renderersLayers;
 
         private void Start()
@@ -40,31 +43,31 @@ namespace ARQuestCreator
         private void Rotate()
         {
             // Get the fingers we want to use
-            var fingers = LeanTouch.GetFingers(false, 1);
+            var fingers = LeanTouch.GetFingers(_ignoreGuiFingers, 1);
 
             // Calculate the screenDelta value based on these fingers
             var screenDelta = LeanGesture.GetScreenDelta(fingers) * _rotationSens;
             _transform.RotateAround(_transform.position, Vector3.up, -screenDelta.x);
             _transform.RotateAround(_transform.position, Vector3.right, screenDelta.y);
-            //_transform.eulerAngles += new Vector3(screenDelta.y, screenDelta.x) ;
+            
         }
 
         private bool Scale()
         {
             // Get the fingers we want to use
-            var fingers = LeanTouch.GetFingers(false, 2);
+            var fingers = LeanTouch.GetFingers(_ignoreGuiFingers, 2);
             
             // Calculate the scaling values based on these fingers
             var scale = LeanGesture.GetPinchScale(fingers, 0);
             if (scale == 1)
                 return false;
             float newScale = _camera.fieldOfView / scale;
-            newScale = Mathf.Clamp(newScale, 5, 50);
+            newScale = Mathf.Clamp(newScale, 5, _maxFoV);
             _camera.fieldOfView = newScale;
 
-            //float newScale = _transform.localScale.x * scale;
-            //newScale = Mathf.Clamp(newScale, 0.1f, _maxScale);
-            //_transform.localScale = Vector3.one * newScale;
+            var degrees = LeanGesture.GetTwistDegrees(fingers);
+            _transform.RotateAround(_transform.position, Vector3.forward, degrees);
+
             return true;
         }
 
@@ -76,20 +79,26 @@ namespace ARQuestCreator
             _transform.localPosition = _startPos;
             _transform.localScale = Vector3.one;
             _transform.localEulerAngles = Vector3.up * 180;
-            _camera.fieldOfView = 50;
-            item.enabled = true;
+            _camera.fieldOfView = _maxFoV;
+            
+            item.SetAtcive(true);
+
+            Vector3 centerCorrection = item.transform.position - item.GetCenterInWorldSpace();
+            Vector3 sizeCor = item.GetSizeInWorldSpace();
+            float scale = Mathf.Sqrt(sizeCor.magnitude);
             item.transform.SetParent(_transform);
-            item.transform.localPosition = Vector3.zero;
+            item.transform.localPosition = centerCorrection;
             item.transform.localRotation = Quaternion.identity;
-            Vector3 globalCenter = GetCenterOfGO(item.gameObject);
-            item.transform.localPosition -= _transform.InverseTransformPoint(globalCenter);
+            item.transform.localScale = item.transform.localScale / scale * _startScale;
+
+
             item.button.enabled = false;
-            _renderers = item.GetComponentsInChildren<Renderer>(true);
-            _renderersLayers = new int[_renderers.Length];
-            for(int i=0; i<_renderers.Length; i++)
+            _transforms = item.GetComponentsInChildren<Transform>(true);
+            _renderersLayers = new int[_transforms.Length];
+            for(int i=0; i<_transforms.Length; i++)
             {
-                _renderersLayers[i] = _renderers[i].gameObject.layer;
-                _renderers[i].gameObject.layer = LayerMask.NameToLayer("ItemViewer");
+                _renderersLayers[i] = _transforms[i].gameObject.layer;
+                _transforms[i].gameObject.layer = LayerMask.NameToLayer("ItemViewer");
             }
         }
 
@@ -99,24 +108,11 @@ namespace ARQuestCreator
                 Debug.LogError("WTF");
             Item result = currentItem;
             currentItem = null;
-            for (int i = 0; i < _renderers.Length; i++)
+            for (int i = 0; i < _transforms.Length; i++)
             {
-                _renderers[i].gameObject.layer = _renderersLayers[i];
+                _transforms[i].gameObject.layer = _renderersLayers[i];
             }
             return result;
-        }
-        
-
-        private Vector3 GetCenterOfGO(GameObject go)
-        {
-            Renderer[] rends = go.GetComponentsInChildren<Renderer>();
-            Vector3 globalCenter = rends[0].bounds.center;
-            for (int i=1; i<rends.Length; i++)
-            {
-                globalCenter += rends[i].bounds.center;
-                globalCenter *= 0.5f;
-            }
-            return globalCenter;
         }
 
         public bool IsEmpty()
